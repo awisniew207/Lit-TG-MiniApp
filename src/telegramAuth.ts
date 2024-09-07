@@ -7,8 +7,9 @@ export async function isRecent(telegramInitData: string) {
 
   export async function getUserData(telegramInitData: string) {
     const urlParams: URLSearchParams = new URLSearchParams(telegramInitData);
-    const userData = urlParams.get("user");
-    const username = JSON.parse(decodeURIComponent(userData!)!).username;
+    const userParam = urlParams.get('user');
+    const userData = JSON.parse(decodeURIComponent(userParam!));
+    const username = userData.username;
     return username;
   }
 
