@@ -34,7 +34,7 @@ function App() {
   const [clickCount, setClickCount] = useState(0);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  //const [isExpanded, setIsExpanded] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -48,7 +48,6 @@ function App() {
     if (tgApp) {
       tgApp.ready();
       setWebApp(tgApp);
-      setIsExpanded(tgApp.isExpanded);
 
       // Expand the Web App if it's not already expanded
       if (!tgApp.isExpanded) {
