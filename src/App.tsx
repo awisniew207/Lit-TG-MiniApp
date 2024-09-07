@@ -13,6 +13,8 @@ interface TelegramWebApp {
     buttons: Array<{ text: string; type: string }>;
   }) => void;
   initData: string;
+  isExpanded: boolean;
+  expand: () => void;
 }
 
 declare global {
@@ -22,6 +24,7 @@ declare global {
     };
   }
 }
+
 // push
 function App() {
   const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
@@ -31,6 +34,7 @@ function App() {
   const [clickCount, setClickCount] = useState(0);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -44,7 +48,12 @@ function App() {
     if (tgApp) {
       tgApp.ready();
       setWebApp(tgApp);
-      //setData(tgApp.initData);
+      setIsExpanded(tgApp.isExpanded);
+
+      // Expand the Web App if it's not already expanded
+      if (!tgApp.isExpanded) {
+        tgApp.expand();
+      }
 
       isRecent(tgApp.initData).then((isRecent) => {
         setRecent(isRecent);
@@ -167,25 +176,27 @@ function App() {
   return (
     <div className="App">
       <canvas ref={canvasRef} onClick={handleCanvasClick} />
-      <div>
-        <h3>Telegram User Data Validity:</h3>
-        <pre>Recent: {JSON.stringify(recent, null, 2)}</pre>
-        <pre>Valid: {JSON.stringify(valid, null, 2)}</pre>
-      </div>
-  
-      <div>
-        <h3>Welcome back:</h3>
-        {webApp && (
-          <pre>user: {JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
-        )}
-      </div>
-  
       <div className="overlay">
-        <h3>Click Count: {clickCount}</h3>
-        {loadingProgress < 100 && (
-          <p>Loading: {loadingProgress.toFixed(2)}%</p>
-        )}
-        {error && <p className="error">{error}</p>}
+        <div className="info-panel">
+          <h3>Telegram Web App Info:</h3>
+          <p>Is Expanded: {isExpanded ? 'Yes' : 'No'}</p>
+          <h4>User Data Validity:</h4>
+          <p>Recent: {JSON.stringify(recent, null, 2)}</p>
+          <p>Valid: {JSON.stringify(valid, null, 2)}</p>
+          {webApp && (
+            <>
+              <h4>Welcome back:</h4>
+              <pre>{JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
+            </>
+          )}
+        </div>
+        <div className="status-panel">
+          <h3>Click Count: {clickCount}</h3>
+          {loadingProgress < 100 && (
+            <p>Loading: {loadingProgress.toFixed(2)}%</p>
+          )}
+          {error && <p className="error">{error}</p>}
+        </div>
       </div>
     </div>
   );
