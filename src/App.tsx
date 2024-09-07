@@ -23,7 +23,7 @@ declare global {
     };
   }
 }
-
+// push
 function App() {
   //const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
   //const [data, setData] = useState<any | null>(null);
