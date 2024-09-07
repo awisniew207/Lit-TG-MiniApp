@@ -25,8 +25,8 @@ declare global {
 }
 
 function App() {
-  const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
-  const [data, setData] = useState<any | null>(null);
+  //const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
+  //const [data, setData] = useState<any | null>(null);
   const [valid, setValid] = useState<boolean | null>(null);
   const [recent, setRecent] = useState<boolean | null>(null);
   const [clickCount, setClickCount] = useState(0);
@@ -44,8 +44,8 @@ function App() {
     const tgApp = window.Telegram?.WebApp;
     if (tgApp) {
       tgApp.ready();
-      setWebApp(tgApp);
-      setData(tgApp.initData);
+      //setWebApp(tgApp);
+      //setData(tgApp.initData);
 
       isRecent(tgApp.initData).then((isRecent) => {
         setRecent(isRecent);
@@ -168,6 +168,11 @@ function App() {
   return (
     <div className="App">
       <canvas ref={canvasRef} onClick={handleCanvasClick} />
+      <div>
+          <h3>Telegram User Data Validity:</h3>
+          <pre> Recent: {JSON.stringify(recent, null, 2)}</pre>
+          <pre> Valid: {JSON.stringify(valid, null, 2)}</pre>
+        </div>
       <div className="overlay">
         <h3>Click Count: {clickCount}</h3>
         {loadingProgress < 100 && <p>Loading: {loadingProgress.toFixed(2)}%</p>}
