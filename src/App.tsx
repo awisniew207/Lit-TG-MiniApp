@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { isRecent, verifyInitData } from "./telegramAuth";
+import { isRecent, verifyInitData, getUserData } from "./telegramAuth";
 import "./App.css";
 
 interface TelegramWebApp {
@@ -13,7 +13,6 @@ interface TelegramWebApp {
     buttons: Array<{ text: string; type: string }>;
   }) => void;
   initData: string;
-  initDataUnsafe: any;
 }
 
 declare global {
@@ -25,7 +24,7 @@ declare global {
 }
 // push
 function App() {
-  //const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
+  const [webApp, setWebApp] = useState<TelegramWebApp | null>(null);
   //const [data, setData] = useState<any | null>(null);
   const [valid, setValid] = useState<boolean | null>(null);
   const [recent, setRecent] = useState<boolean | null>(null);
@@ -44,7 +43,7 @@ function App() {
     const tgApp = window.Telegram?.WebApp;
     if (tgApp) {
       tgApp.ready();
-      //setWebApp(tgApp);
+      setWebApp(tgApp);
       //setData(tgApp.initData);
 
       isRecent(tgApp.initData).then((isRecent) => {
@@ -169,13 +168,23 @@ function App() {
     <div className="App">
       <canvas ref={canvasRef} onClick={handleCanvasClick} />
       <div>
-          <h3>Telegram User Data Validity:</h3>
-          <pre> Recent: {JSON.stringify(recent, null, 2)}</pre>
-          <pre> Valid: {JSON.stringify(valid, null, 2)}</pre>
-        </div>
+        <h3>Telegram User Data Validity:</h3>
+        <pre>Recent: {JSON.stringify(recent, null, 2)}</pre>
+        <pre>Valid: {JSON.stringify(valid, null, 2)}</pre>
+      </div>
+  
+      <div>
+        <h3>Welcome back:</h3>
+        {webApp && (
+          <pre>user: {JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
+        )}
+      </div>
+  
       <div className="overlay">
         <h3>Click Count: {clickCount}</h3>
-        {loadingProgress < 100 && <p>Loading: {loadingProgress.toFixed(2)}%</p>}
+        {loadingProgress < 100 && (
+          <p>Loading: {loadingProgress.toFixed(2)}%</p>
+        )}
         {error && <p className="error">{error}</p>}
       </div>
     </div>

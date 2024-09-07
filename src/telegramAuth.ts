@@ -5,6 +5,13 @@ export async function isRecent(telegramInitData: string) {
     return isRecent;
   }
 
+  export async function getUserData(telegramInitData: string) {
+    const urlParams: URLSearchParams = new URLSearchParams(telegramInitData);
+    const userData = urlParams.get("user");
+    const username = JSON.parse(decodeURIComponent(userData!)!).username;
+    return username;
+  }
+
   export async function verifyInitData(
     telegramInitData: string,
     botToken: string
