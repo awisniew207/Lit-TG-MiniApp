@@ -35,6 +35,7 @@ function App() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -173,33 +174,56 @@ function App() {
     setClickCount((prevCount) => prevCount + 1);
   };
 
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
   return (
     <div className="App">
       <canvas ref={canvasRef} onClick={handleCanvasClick} />
-      <div className="overlay">
-        <div className="info-panel">
-          <h3>Telegram Web App Info:</h3>
-          <p>Is Expanded: {isExpanded ? 'Yes' : 'No'}</p>
-          <h4>User Data Validity:</h4>
-          <p>Recent: {JSON.stringify(recent, null, 2)}</p>
-          <p>Valid: {JSON.stringify(valid, null, 2)}</p>
-          {webApp && (
-            <>
-              <h4>Welcome back:</h4>
-              <pre>{JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
-            </>
-          )}
+      <button 
+        onClick={toggleSidebar}
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          zIndex: 1000,
+          background: 'rgba(0, 0, 0, 0.7)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          padding: '5px 10px',
+          cursor: 'pointer'
+        }}
+      >
+        {showSidebar ? 'Hide Info' : 'Show Info'}
+      </button>
+      {showSidebar && (
+        <div className="overlay">
+          <div className="info-panel">
+            <h3>Telegram Web App Info</h3>
+            <p><strong>Is Expanded:</strong> {isExpanded ? 'Yes' : 'No'}</p>
+            <h4>User Data Validity:</h4>
+            <p><strong>Recent:</strong> {JSON.stringify(recent)}</p>
+            <p><strong>Valid:</strong> {JSON.stringify(valid)}</p>
+            {webApp && (
+              <>
+                <h4>User Data:</h4>
+                <pre>{JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
+              </>
+            )}
+          </div>
+          <div className="status-panel">
+            <h4>Status</h4>
+            <p><strong>Click Count:</strong> {clickCount}</p>
+            {loadingProgress < 100 && (
+              <p><strong>Loading:</strong> {loadingProgress.toFixed(2)}%</p>
+            )}
+            {error && <p className="error">{error}</p>}
+          </div>
         </div>
-        <div className="status-panel">
-          <h3>Click Count: {clickCount}</h3>
-          {loadingProgress < 100 && (
-            <p>Loading: {loadingProgress.toFixed(2)}%</p>
-          )}
-          {error && <p className="error">{error}</p>}
-        </div>
-      </div>
+      )}
     </div>
   );
 }
-
 export default App;
