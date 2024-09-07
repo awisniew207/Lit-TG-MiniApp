@@ -34,6 +34,7 @@ function App() {
   const [clickCount, setClickCount] = useState(0);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   //const [isExpanded, setIsExpanded] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,6 +54,10 @@ function App() {
       if (!tgApp.isExpanded) {
         tgApp.expand();
       }
+
+    getUserData(tgApp.initData).then((username) => {
+      setUsername(username);
+    });
 
       isRecent(tgApp.initData).then((isRecent) => {
         setRecent(isRecent);
@@ -184,7 +189,7 @@ function App() {
       <div>
         <h3>Welcome back:</h3>
         {webApp && (
-          <pre>user: {JSON.stringify(getUserData(webApp.initData), null, 2)}</pre>
+          <pre>user: {JSON.stringify(username, null, 2)}</pre>
         )}
       </div>
   

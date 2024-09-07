@@ -5,7 +5,7 @@ export async function isRecent(telegramInitData: string) {
     return isRecent;
   }
 
-  export async function getUserData(telegramInitData: string) {
+  export async function getUserData(telegramInitData: string): Promise<string | null> {
     const urlParams: URLSearchParams = new URLSearchParams(telegramInitData);
     const userParam = urlParams.get('user');
     console.log(userParam);
